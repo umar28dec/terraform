@@ -1,0 +1,29 @@
+service: greeting-lambda
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  role: arn:aws:iam::304838291705:role/serverless-greeting-role
+  environment:
+    NODE_OPTIONS: "--enable-source-maps"
+
+functions:
+  greeting:
+    handler: index.handler
+    layers:
+      - !Ref TranslateLayerLambdaLayer
+  layers:
+    translateLayer:
+      path: layer
+
+plugins:
+  - serverless-webpack
+
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+
+package:
+  excludeDevDependencies: true
